@@ -5,7 +5,10 @@ import bodyParser from "body-parser";
 import type { Request, Response } from "express";
 import morgan from "morgan";
 
+import connectToDB from "./config/db";
+
 const app = express();
+
 config();
 app.use(cookieParser());
 app.use(express.json());
@@ -24,5 +27,11 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.error(`Server is running on the port ${port}`);
+  connectToDB()
+    .then(() => {
+      console.log(`Server is running on the port ${port}`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
