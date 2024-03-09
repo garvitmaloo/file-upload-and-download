@@ -2,12 +2,15 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import bodyParser from "body-parser";
-import type { Request, Response } from "express";
 import morgan from "morgan";
+import type { Request, Response, NextFunction } from "express";
 
 import connectToDB from "./config/db";
+import authRoutes from "./routes/auth";
+import { errorHandler } from "./middleware/errors";
 
 const app = express();
+const port = process.env.PORT ?? 9000;
 
 config();
 app.use(cookieParser());
@@ -20,10 +23,11 @@ app.use(
 );
 app.use(morgan("tiny"));
 
-const port = process.env.PORT ?? 9000;
+// Main App Routes
+app.use("/auth", authRoutes);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, World!");
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  errorHandler(error, req, res, next);
 });
 
 app.listen(port, () => {
