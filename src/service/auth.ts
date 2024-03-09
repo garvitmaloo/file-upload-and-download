@@ -27,7 +27,7 @@ export const registerUserService = async ({
 
     const userRecord = await User.findOne({ email });
 
-    if (userRecord === null) {
+    if (userRecord !== null) {
       return {
         error: {
           statusCode: 404,
