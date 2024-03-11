@@ -5,7 +5,7 @@ import type {
   StandardResponse,
   UserDocument
 } from "../../types";
-import { registerUserService } from "../service/auth";
+import { loginUserService, registerUserService } from "../service/auth";
 
 export const handleRegisterUser = async (
   req: Request<User>,
@@ -25,12 +25,31 @@ export const handleRegisterUser = async (
   return res.status(201).json(response);
 };
 
-export const handleLogin = (
+export const handleLogin = async (
   req: Request<LoginDetails>,
-  res: Response
-): void => {
-  const loginData = req.body;
-  console.log("Login = ", loginData);
+  res: Response,
+  next: NextFunction
+): Promise<Response<StandardResponse<UserDocument>> | undefined> => {
+  const loginData: LoginDetails = req.body;
 
-  res.send("Logging in");
+  const response = await loginUserService(loginData);
+
+  if (response.error !== null) {
+    res.statusCode = response.error.statusCode;
+    next(new Error(response.error.message));
+    return;
+  }
+
+  const { result } = response;
+  const token = result?.secureToken;
+
+  res.cookie("token", token);
+
+  return res.status(200).json({
+    error: null,
+    result: {
+      fullName: result?.fullName,
+      email: result?.email
+    }
+  });
 };

@@ -17,3 +17,10 @@ export interface LoginDetails {
 }
 
 export type UserDocument = User & Document;
+
+export interface LoggedInUserDocument {
+  fullName: string;
+  email: string;
+  password: string;
+  secureToken: string;
+}
