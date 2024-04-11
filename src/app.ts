@@ -9,7 +9,6 @@ import connectToDB from "./config/db";
 import { logger } from "./utils/logger";
 import { handleErrors } from "./middleware/handleErrors";
 import { resourcesRouter } from "./routes/resources";
-import { singleUpload, multipleUploads } from "./config/multer";
 
 const app = express();
 config();
@@ -26,16 +25,7 @@ app.use(morgan("tiny"));
 const port = process.env.PORT ?? 9000;
 
 // APP ROUTES
-app.use(
-  "/api/resources/single-upload",
-  singleUpload.single("file"),
-  resourcesRouter
-);
-app.use(
-  "/api/resources/multiple-uploads",
-  multipleUploads.array("files", 10),
-  resourcesRouter
-);
+app.use("/api/resources", resourcesRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   handleErrors(error, req, res, next);

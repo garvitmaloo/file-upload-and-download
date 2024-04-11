@@ -29,13 +29,13 @@ const diskStorageConfig = diskStorage({
   }
 });
 
-export const singleUpload = multer({
+const singleUpload = multer({
   storage: diskStorageConfig,
   fileFilter: fileFilterHandler,
   limits: { fileSize: MAX_MEDIUM_FILE_SIZE }
 });
 
-export const multipleUploads = multer({
+const multipleUploads = multer({
   storage: multer.memoryStorage(),
   fileFilter: fileFilterHandler,
   limits: {
@@ -43,3 +43,6 @@ export const multipleUploads = multer({
     fileSize: MAX_SMALL_FILE_SIZE
   }
 });
+
+export const uploadSingleFile = singleUpload.single("file");
+export const uploadMultipleFiles = multipleUploads.array("files", 10);
