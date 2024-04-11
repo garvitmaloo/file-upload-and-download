@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Router } from "express";
 
 import { uploadSingleFile, uploadMultipleFiles } from "../config/multer";
+import postSingleUploadController from "../controllers/resources/postSingleUploadController";
+import postMultipleUploadsContainer from "../controllers/resources/postMultipleUploadsContainer";
 
 const resourcesRouter = Router();
 
@@ -17,9 +20,7 @@ resourcesRouter.post(
       next();
     });
   },
-  (req, res) => {
-    res.send("Single file upload");
-  }
+  postSingleUploadController
 );
 
 resourcesRouter.post(
@@ -35,9 +36,7 @@ resourcesRouter.post(
       next();
     });
   },
-  (req, res) => {
-    res.send("Multiple files upload");
-  }
+  postMultipleUploadsContainer
 );
 
 export { resourcesRouter };
