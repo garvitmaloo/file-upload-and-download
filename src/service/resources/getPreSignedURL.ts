@@ -14,7 +14,9 @@ const getPreSignedUrl = async (
       Key: filename
     });
 
-    const url = await getSignedUrl(s3Client, getFileCommand);
+    const url = await getSignedUrl(s3Client, getFileCommand, {
+      expiresIn: 604800 // 1 week
+    });
     return {
       error: null,
       result: url
